@@ -173,6 +173,7 @@ void scheduler();
 void myTaskEnd();
 	// 'short term' scheduler algorithms 
 int roundRobin();
+int EDF();
 	// main scheduler object
 extern Parallelism SMARTS;
 
