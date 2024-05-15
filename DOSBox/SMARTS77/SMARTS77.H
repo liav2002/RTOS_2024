@@ -47,6 +47,14 @@ private:
 class Task 
 {
 public:
+
+	/* Add Fields: */
+	int cycles;
+	int c_time; // task cycle
+	int left_c_time; // current left time cycle
+	unsigned taskCopy[MaxStack]; // a copy of the task
+	/***************/
+	
 	char name;                      // task name
 	unsigned stack[MaxStack];       // the stack
 	unsigned stackSeg, stackPtr;    // the stack pointer
@@ -56,7 +64,15 @@ public:
 	Event *expectedEvent;           // the event that this task is waiting for
 	int sleepCount;                 // the sleep remainder time
 	Task();
-	void declare(void far *code, void far *taskEnd, char name);
+	
+	/* Update Function: */
+	void declare(void far *code, void far *taskEnd, char name, int c_time, int cycles);
+	/************************/
+	
+	/* Add Funciton: */
+	void reDeclare();
+	/*****************/
+	
 	void sleepDecr();
 	void incrPriority();
 	void setOriginalPriority();
