@@ -22,4 +22,20 @@ int roundRobin( )
 	return nextTask;
 }
 
+int EDF()
+// Earliest Deadline First short-term algorithm 
+{
+	int min = MAXINT;
+	int nextTask = SMARTS.getTotalTasks();
+
+	for (int i = 0; i < SMARTS.getTotalTasks(); i++)
+		if (SMARTS.getStatus(i) == READY &&
+			min > SMARTS.getLeftCycleTime(i))
+		{
+			nextTask = i;
+			min = SMARTS.getLeftCycleTime(i);
+		}
+
+	return nextTask;
+}
 
