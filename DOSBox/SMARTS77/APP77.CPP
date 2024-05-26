@@ -6,6 +6,12 @@
 /* APP77.CPP, an application to demonstrate SMARTS77  functioning   */
 /********************************************************************/
 #include "smarts77.h"
+#define NUM_OF_ITERATIONS 10
+
+/*
+Liav Ariel (212830871)
+Meir Ariche ()
+*/
 
 // user Functions
 void a( )
@@ -13,9 +19,9 @@ void a( )
 	SMARTS.contextSwitchOff();
 	cout << "\n *************   A Start    *********************";
 	SMARTS.contextSwitchOn();
-	for (int j=0; j <500; j++)
+	for (int j=0; j < NUM_OF_ITERATIONS; j++)
 	{
-		for (long i=0; i <600000; i++);
+		for (long i=0; i < 600000; i++);
 		SMARTS.contextSwitchOff();
 		cout << "A";
 		SMARTS.contextSwitchOn();
@@ -30,7 +36,7 @@ void b( )
 	SMARTS.contextSwitchOff();
 	cout << "\n *************   B Start    *********************";
 	SMARTS.contextSwitchOn();
-	for (int j=0; j <500; j++)
+	for (int j=0; j < NUM_OF_ITERATIONS; j++)
 	{
 		for (long i=0; i < 600000; i++);
 		SMARTS.contextSwitchOff();
@@ -47,7 +53,7 @@ void c( )
 	SMARTS.contextSwitchOff();
 	cout << "\n *************   C Start    *********************";
 	SMARTS.contextSwitchOn();
-	for (int j=0; j <500; j++)
+	for (int j=0; j < NUM_OF_ITERATIONS; j++)
 	{
 		for (long i=0; i < 600000; i++);
 		SMARTS.contextSwitchOff();
@@ -62,11 +68,20 @@ void c( )
 void main( )
 {
 	clrscr();
+	
+	// Round Rubin
 	SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, roundRobin);
-	SMARTS.declareTask(a,'A');
-	SMARTS.declareTask(b,'B');
-	SMARTS.declareTask(c,'C');
+	
+	// EDF
+	//SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, EDF);
+	
+	//Parameters are: char name, int cycleTime, int cycles
+	SMARTS.declareTask(a, 'A', 50, 3);
+	SMARTS.declareTask(b, 'B', 70, 4);
+	SMARTS.declareTask(c, 'C', 100, 5);
 	SMARTS.runTheTasks();
+	printf("Press any key for continue...");
+	scanf("%d");
 }
 
 
