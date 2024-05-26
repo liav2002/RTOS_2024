@@ -31,6 +31,7 @@ Parallelism::Parallelism()
 	deadlock    = false;
 	contextSwitchFlag = true;
 	endOfTimeSlice = true;
+	error = false;
 }
 
 void Parallelism::externalFunctions(void interrupt ( *timerInterruptHandler)(...),
@@ -42,17 +43,17 @@ void Parallelism::externalFunctions(void interrupt ( *timerInterruptHandler)(...
 	this->scheduler = scheduler;
 	this->userTaskEnd = userTaskEnd;
 	this->algorithm = algorithm;
-	contextSched.declare(scheduler, userTaskEnd, 'S'); // prepare the stack of the scheduler task
+	contextSched.declare(scheduler, userTaskEnd, 'S', 0, 0); // prepare the stack of the scheduler task
 	for (int i=MaxStack-1; i >= (MaxStack-14); i--)
 		schedCopy[i]=contextSched.stack[i];
 }
 
-int Parallelism::declareTask(void far *code, char name)
-		// Insert a new task entry in SMARTS context array [ ]
+int Parallelism::declareTask(void far* code, char name, int cycleTime, int cycles)
+	// Insert a new task entry in SMARTS context array [ ]
 {
 	if (totalTasks < MaxTask-1) 
 	{
-		context[totalTasks++].declare(code, userTaskEnd, name);
+		context[totalTasks++].declare(code, userTaskEnd, name, cycleTime, cycles);
 		++activeTasks;
 		return true;
 	}
@@ -85,12 +86,18 @@ void Parallelism::runTheTasks()
 		if (deadlock)
 		{
 			textcolor(RED);
-			cprintf("\n\n\rExit : deadlock");
+			cprintf("\n\n\rExit : deadlock\n");
 			break;
 		}
-		if (activeTasks==0)
+		if (error) 
 		{
-			cprintf("\n\n\rExit : finish");
+			textcolor(RED);
+			cprintf("\n\n\rExit : error\n");
+			break;
+		}
+		if (finishAll())
+		{
+			cprintf("\n\n\rExit : finish\n");
 			break;
 		}
 	}
@@ -204,6 +211,44 @@ char Parallelism::getCurrentName( )
 	return context[currentTask].name;
 }
 
+/* Add Funcitons: */
+int Parallelism::getError()
+{
+	return error;
+}
+
+void Parallelism::setError()
+{
+	error = true;
+}
+
+int Parallelism::getCycles(int taskNum)
+{
+	return (taskNum <= totalTasks) ? context[taskNum].cycles : UNDEFINED;
+}
+
+int Parallelism::getLeftCycleTime(int taskNum)
+{
+	return (taskNum <= totalTasks) ? context[taskNum].leftCycleTime : UNDEFINED;
+}
+
+void Parallelism::leftCycleTimeDecr(int taskNum)
+{
+	if (taskNum <= totalTasks)
+		context[taskNum].leftCycleTime--;
+}
+
+int Parallelism::finishAll() 
+{
+	for (int i = 0; i < totalTasks; i++)
+	{
+		if (context[i].cycles > 1)
+			return 0;
+	}
+	return 1;
+}
+/*****************/
+
 taskStatus Parallelism::getStatus(int taskNum)  	
 	// returns status or undefined if not found
 {
@@ -311,20 +356,41 @@ void Parallelism::getSchedStack(unsigned &StackSeg, unsigned &StackPtr)
 	StackPtr = contextSched.stackPtr;
 }
 
+/* Update Function: */
 void Parallelism::handleTimers()
 	// handling of the sleep status mode
 {
-	for (int i=totalTasks-1; i >=0 ; --i) 
-	{	
-		if(getStatus(i)==SLEEP)
+	int i;
+	for (i = totalTasks - 1; i >= 0; --i)
+	{
+		leftCycleTimeDecr(i);
+		if (getLeftCycleTime(i) == 0)
+		{
+			if (getCycles(i) > 1) {
+				if (getStatus(i) != NOT_ACTIVE)
+				{
+					SMARTS.setError();
+				}
+				else
+				{
+					context[i].reDeclare();
+				}
+			}
+		}			
+	}
+
+	for (i = totalTasks - 1; i >= 0; --i)
+	{
+
+		if (getStatus(i) == SLEEP)
 		{
 			sleepDecr(i);
 			if (getStatus(i) == READY)
 				--sleepTasks;
 		}
 	}
-
 }
+/************************/
 
 void Parallelism::taskEnd( )
 	// This function is called after the last operation of a task, instead of function return
@@ -352,16 +418,34 @@ Task::Task()
 	currentPriority=priority=0;
 }
 //-----------------------------------------------------
-void Task::declare(void far *code, void far *userTaskEnd, char name)
+void Task::declare(void far *code, void far *userTaskEnd, char name, int cycleTime, int cycles)
 {
-	stack[MaxStack-5]=FP_OFF(code);
-	stack[MaxStack-4]=FP_SEG(code);
-	stack[MaxStack-3]=_FLAGS;
-	stack[MaxStack-2]=FP_OFF(userTaskEnd);
-	stack[MaxStack-1]=FP_SEG(userTaskEnd);
-	this->name= name;
+	stack[MaxStack - 5] = FP_OFF(code);
+	stack[MaxStack - 4] = FP_SEG(code);
+	stack[MaxStack - 3] = _FLAGS;
+	stack[MaxStack - 2] = FP_OFF(userTaskEnd);
+	stack[MaxStack - 1] = FP_SEG(userTaskEnd);
+	this->name = name;
+	this->cycleTime = cycleTime;
+	this->leftCycleTime = cycleTime;
+	this->cycles = cycles;
+	for (int i = MaxStack - 1; i >= (MaxStack - 14); i--)
+		taskCopy[i] = stack[i];
 	status = READY;
 }
+
+/* Add Funciton: */
+void Task::reDeclare()
+{
+	for (int i = MaxStack - 1; i >= (MaxStack - 14); i--)
+		stack[i] = taskCopy[i];
+	stackSeg = FP_SEG(&stack[MaxStack - 14]);
+	stackPtr = FP_OFF(&stack[MaxStack - 14]);
+	this->cycles--;
+	this->leftCycleTime = cycleTime;
+	status = READY;
+}
+/*****************/
 //----------------------------------------------------
 void Task::incrPriority( )
 {
