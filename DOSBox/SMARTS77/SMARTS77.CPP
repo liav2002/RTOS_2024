@@ -92,7 +92,7 @@ void Parallelism::runTheTasks()
 		if (error) 
 		{
 			textcolor(RED);
-			cprintf("\n\n\rExit : error\n");
+			cprintf("\n\n\rExit : error (mine)\n");
 			break;
 		}
 		if (finishAll())
@@ -229,13 +229,13 @@ int Parallelism::getCycles(int taskNum)
 
 int Parallelism::getLeftCycleTime(int taskNum)
 {
-	return (taskNum <= totalTasks) ? context[taskNum].leftCycleTime : UNDEFINED;
+	return (taskNum <= totalTasks) ? context[taskNum].left_c_time : UNDEFINED;
 }
 
 void Parallelism::leftCycleTimeDecr(int taskNum)
 {
 	if (taskNum <= totalTasks)
-		context[taskNum].leftCycleTime--;
+		context[taskNum].left_c_time--;
 }
 
 int Parallelism::finishAll() 
@@ -426,8 +426,8 @@ void Task::declare(void far *code, void far *userTaskEnd, char name, int cycleTi
 	stack[MaxStack - 2] = FP_OFF(userTaskEnd);
 	stack[MaxStack - 1] = FP_SEG(userTaskEnd);
 	this->name = name;
-	this->cycleTime = cycleTime;
-	this->leftCycleTime = cycleTime;
+	this->c_time = cycleTime;
+	this->left_c_time = cycleTime;
 	this->cycles = cycles;
 	for (int i = MaxStack - 1; i >= (MaxStack - 14); i--)
 		taskCopy[i] = stack[i];
@@ -442,7 +442,7 @@ void Task::reDeclare()
 	stackSeg = FP_SEG(&stack[MaxStack - 14]);
 	stackPtr = FP_OFF(&stack[MaxStack - 14]);
 	this->cycles--;
-	this->leftCycleTime = cycleTime;
+	this->left_c_time = c_time;
 	status = READY;
 }
 /*****************/

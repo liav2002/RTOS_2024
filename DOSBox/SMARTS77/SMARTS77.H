@@ -115,7 +115,7 @@ public:
 	void externalFunctions(void interrupt ( *timerInterruptHandler)(...),
 				   void far *scheduler, void far *userTaskEnd,
 				   int far (*algorithm)());
-	int declareTask(void far *code, char name); // inserts a new task entry
+	int declareTask(void far* code, char name, int cycleTime, int cycles); // inserts a new task entry
 	void runTheTasks();// start running the tasks
 	void callScheduler();          // return to the control to the scheduler
 	void restoreSchedStack();       // restore the 'scheduler' stack

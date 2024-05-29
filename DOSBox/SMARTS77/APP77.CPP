@@ -81,7 +81,7 @@ void main( )
 	SMARTS.declareTask(c, 'C', 100, 5);
 	SMARTS.runTheTasks();
 	printf("Press any key for continue...");
-	scanf("%d");
+	getch();
 }
 
 
