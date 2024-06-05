@@ -88,6 +88,11 @@ void Parallelism::runTheTasks()
 			cprintf("\n\n\rExit : deadlock\n");
 			break;
 		}
+		if (activeTasks==0)
+		{
+			cprintf("\n\n\rExit : finish");
+			break;
+		}
 	}
 
 		// restore the original BIOS 'interrupt vector' at the end before returning to regular DOS
@@ -327,7 +332,19 @@ void Parallelism::getSchedStack(unsigned &StackSeg, unsigned &StackPtr)
 void Parallelism::handleTimers()
 	// handling of the sleep status mode
 {
-	for (int i = totalTasks - 1; i >= 0; --i)
+	int i;
+	for (i = totalTasks - 1; i >= 0; --i)
+	{
+		leftCycleTimeDecr(i);
+		if (getLeftCycleTime(i) == 0)
+		{
+			if (getCycles(i) > 0 && getStatus(i) == NOT_ACTIVE) {
+				context[i].reDeclare();
+			}
+		}			
+	}
+	
+	for (i = totalTasks - 1; i >= 0; --i)
 	{
 
 		if (getStatus(i) == SLEEP)
@@ -379,6 +396,23 @@ void Task::declare(void far *code, void far *userTaskEnd, char name, int cycleTi
 	this->cycles = cycles;
 	for (int i = MaxStack - 1; i >= (MaxStack - 14); i--)
 		taskCopy[i] = stack[i];
+	status = READY;
+}
+
+void Task::reDeclare()
+{
+	// העתק את המחסנית
+	for (int i = MaxStack - 1; i >= (MaxStack - 14); i--)
+		stack[i] = taskCopy[i];
+	
+	stackSeg=FP_SEG(&stack[MaxStack-14]);
+	stackPtr=FP_OFF(&stack[MaxStack-14]);
+	
+	// הורד 1 למונה מספר הפעמים
+	this->cycles--;
+	this->left_c_time = this->c_time;
+	
+	// עדכן את זמני המחזור
 	status = READY;
 }
 

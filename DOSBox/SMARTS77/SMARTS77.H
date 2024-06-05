@@ -69,6 +69,10 @@ public:
 	void declare(void far *code, void far *taskEnd, char name, int c_time, int cycles);
 	/************************/
 	
+	/* Add Funciton: */
+	void reDeclare();
+	/*****************/
+	
 	void sleepDecr();
 	void incrPriority();
 	void setOriginalPriority();
