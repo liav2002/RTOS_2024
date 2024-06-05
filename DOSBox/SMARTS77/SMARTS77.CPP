@@ -31,7 +31,6 @@ Parallelism::Parallelism()
 	deadlock    = false;
 	contextSwitchFlag = true;
 	endOfTimeSlice = true;
-	error = false;
 }
 
 void Parallelism::externalFunctions(void interrupt ( *timerInterruptHandler)(...),
@@ -87,17 +86,6 @@ void Parallelism::runTheTasks()
 		{
 			textcolor(RED);
 			cprintf("\n\n\rExit : deadlock\n");
-			break;
-		}
-		if (error) 
-		{
-			textcolor(RED);
-			cprintf("\n\n\rExit : error (mine)\n");
-			break;
-		}
-		if (finishAll())
-		{
-			cprintf("\n\n\rExit : finish\n");
 			break;
 		}
 	}
@@ -211,17 +199,6 @@ char Parallelism::getCurrentName( )
 	return context[currentTask].name;
 }
 
-/* Add Funcitons: */
-int Parallelism::getError()
-{
-	return error;
-}
-
-void Parallelism::setError()
-{
-	error = true;
-}
-
 int Parallelism::getCycles(int taskNum)
 {
 	return (taskNum <= totalTasks) ? context[taskNum].cycles : UNDEFINED;
@@ -236,16 +213,6 @@ void Parallelism::leftCycleTimeDecr(int taskNum)
 {
 	if (taskNum <= totalTasks)
 		context[taskNum].left_c_time--;
-}
-
-int Parallelism::finishAll() 
-{
-	for (int i = 0; i < totalTasks; i++)
-	{
-		if (context[i].cycles > 1)
-			return 0;
-	}
-	return 1;
 }
 /*****************/
 
@@ -360,26 +327,7 @@ void Parallelism::getSchedStack(unsigned &StackSeg, unsigned &StackPtr)
 void Parallelism::handleTimers()
 	// handling of the sleep status mode
 {
-	int i;
-	for (i = totalTasks - 1; i >= 0; --i)
-	{
-		leftCycleTimeDecr(i);
-		if (getLeftCycleTime(i) == 0)
-		{
-			if (getCycles(i) > 1) {
-				if (getStatus(i) != NOT_ACTIVE)
-				{
-					SMARTS.setError();
-				}
-				else
-				{
-					context[i].reDeclare();
-				}
-			}
-		}			
-	}
-
-	for (i = totalTasks - 1; i >= 0; --i)
+	for (int i = totalTasks - 1; i >= 0; --i)
 	{
 
 		if (getStatus(i) == SLEEP)
@@ -434,18 +382,6 @@ void Task::declare(void far *code, void far *userTaskEnd, char name, int cycleTi
 	status = READY;
 }
 
-/* Add Funciton: */
-void Task::reDeclare()
-{
-	for (int i = MaxStack - 1; i >= (MaxStack - 14); i--)
-		stack[i] = taskCopy[i];
-	stackSeg = FP_SEG(&stack[MaxStack - 14]);
-	stackPtr = FP_OFF(&stack[MaxStack - 14]);
-	this->cycles--;
-	this->left_c_time = c_time;
-	status = READY;
-}
-/*****************/
 //----------------------------------------------------
 void Task::incrPriority( )
 {

@@ -69,10 +69,6 @@ public:
 	void declare(void far *code, void far *taskEnd, char name, int c_time, int cycles);
 	/************************/
 	
-	/* Add Funciton: */
-	void reDeclare();
-	/*****************/
-	
 	void sleepDecr();
 	void incrPriority();
 	void setOriginalPriority();
@@ -85,10 +81,6 @@ private:
 	Task context[MaxTask];  // all tasks entries
 	Task contextSched;      // scheduler entry
 	unsigned schedCopy[MaxStack];  // a copy of the scheduler stack
-	
-	/* Add Field: */
-	int error;
-	/**************/
 	
 	int totalTasks;          // total declared tasks
 	int currentTask;        // time slice holding task
@@ -154,12 +146,9 @@ public:
 	void taskEnd();
 	
 	/* Add Functions: */
-	int getError();            
-	void setError(); 
 	int getCycles(int taskNum);
 	int getLeftCycleTime(int taskNum);
 	void leftCycleTimeDecr(int taskNum);
-	int finishAll();
 	/*****************/
 	
 };

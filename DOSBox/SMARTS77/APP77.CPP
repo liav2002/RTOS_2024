@@ -70,15 +70,15 @@ void main( )
 	clrscr();
 	
 	// Round Rubin
-	SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, roundRobin);
+	// SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, roundRobin);
 	
 	// EDF
-	//SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, EDF);
+	SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, EDF);
 	
 	//Parameters are: char name, int cycleTime, int cycles
-	SMARTS.declareTask(a, 'A', 50, 3);
-	SMARTS.declareTask(b, 'B', 70, 4);
-	SMARTS.declareTask(c, 'C', 100, 5);
+	SMARTS.declareTask(a, 'A', 5, 3);
+	SMARTS.declareTask(b, 'B', 7, 4);
+	SMARTS.declareTask(c, 'C', 10, 5);
 	SMARTS.runTheTasks();
 	printf("Press any key for continue...");
 	getch();
