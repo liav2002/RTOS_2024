@@ -86,6 +86,10 @@ private:
 	Task contextSched;      // scheduler entry
 	unsigned schedCopy[MaxStack];  // a copy of the scheduler stack
 	
+	/* Add Field: */
+	int error;
+	/**************/
+	
 	int totalTasks;          // total declared tasks
 	int currentTask;        // time slice holding task
 	int deadlock;           // deadlock flag
@@ -150,6 +154,8 @@ public:
 	void taskEnd();
 	
 	/* Add Functions: */
+	int getError();            
+	void setError(); 
 	int getCycles(int taskNum);
 	int getLeftCycleTime(int taskNum);
 	void leftCycleTimeDecr(int taskNum);

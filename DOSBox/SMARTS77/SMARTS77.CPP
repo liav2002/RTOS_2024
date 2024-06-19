@@ -88,9 +88,15 @@ void Parallelism::runTheTasks()
 			cprintf("\n\n\rExit : deadlock\n");
 			break;
 		}
+		if (error) 
+		{
+			textcolor(RED);
+			cprintf("\n\n\rExit : error\n");
+			break;
+		}
 		if (activeTasks==0)
 		{
-			cprintf("\n\n\rExit : finish");
+			cprintf("\n\n\rExit : finish\n");
 			break;
 		}
 	}
@@ -202,6 +208,17 @@ char Parallelism::getName(int taskNum)	// returns name found or ' ' if not
 char Parallelism::getCurrentName( )
 {	
 	return context[currentTask].name;
+}
+
+/* Add Funcitons: */
+int Parallelism::getError()
+{
+	return error;
+}
+
+void Parallelism::setError()
+{
+	error = true;
 }
 
 int Parallelism::getCycles(int taskNum)
@@ -338,8 +355,15 @@ void Parallelism::handleTimers()
 		leftCycleTimeDecr(i);
 		if (getLeftCycleTime(i) == 0)
 		{
-			if (getCycles(i) > 0 && getStatus(i) == NOT_ACTIVE) {
-				context[i].reDeclare();
+			if (getCycles(i) > 1) {
+				if (getStatus(i) == NOT_ACTIVE)
+				{
+					context[i].reDeclare();
+				}
+				else
+				{
+					SMARTS.setError();
+				}
 			}
 		}			
 	}
