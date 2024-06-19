@@ -6,9 +6,9 @@
 /* APP77.CPP, an application to demonstrate SMARTS77  functioning   */
 /********************************************************************/
 #include "smarts77.h"
-#define NUM_OF_ITERATIONS_a 8
-#define NUM_OF_ITERATIONS_b 12
-#define NUM_OF_ITERATIONS_c 10
+#define NUM_OF_ITERATIONS_a 5
+#define NUM_OF_ITERATIONS_b 7
+#define NUM_OF_ITERATIONS_c 9
 
 /*
 Case1 (Both of them working): 5, 7, 9
@@ -18,7 +18,7 @@ Case3 (Only EDF working): 8, 12, 10
 
 /*
 Liav Ariel (212830871)
-Meir Ariche ()
+Meir Ariche (324043728)
 */
 
 // user Functions
