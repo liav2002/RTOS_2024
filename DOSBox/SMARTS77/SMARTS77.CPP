@@ -31,7 +31,6 @@ Parallelism::Parallelism()
 	deadlock    = false;
 	contextSwitchFlag = true;
 	endOfTimeSlice = true;
-	error = false;
 }
 
 void Parallelism::externalFunctions(void interrupt ( *timerInterruptHandler)(...),
@@ -92,10 +91,10 @@ void Parallelism::runTheTasks()
 		if (error) 
 		{
 			textcolor(RED);
-			cprintf("\n\n\rExit : error (mine)\n");
+			cprintf("\n\n\rExit : error\n");
 			break;
 		}
-		if (finishAll())
+		if (all_tasks_end())
 		{
 			cprintf("\n\n\rExit : finish\n");
 			break;
@@ -238,7 +237,7 @@ void Parallelism::leftCycleTimeDecr(int taskNum)
 		context[taskNum].left_c_time--;
 }
 
-int Parallelism::finishAll() 
+int Parallelism::all_tasks_end() 
 {
 	for (int i = 0; i < totalTasks; i++)
 	{
@@ -367,18 +366,18 @@ void Parallelism::handleTimers()
 		if (getLeftCycleTime(i) == 0)
 		{
 			if (getCycles(i) > 1) {
-				if (getStatus(i) != NOT_ACTIVE)
+				if (getStatus(i) == NOT_ACTIVE)
 				{
-					SMARTS.setError();
+					context[i].reDeclare();
 				}
 				else
 				{
-					context[i].reDeclare();
+					SMARTS.setError();
 				}
 			}
 		}			
 	}
-
+	
 	for (i = totalTasks - 1; i >= 0; --i)
 	{
 
@@ -434,18 +433,23 @@ void Task::declare(void far *code, void far *userTaskEnd, char name, int cycleTi
 	status = READY;
 }
 
-/* Add Funciton: */
 void Task::reDeclare()
 {
+	// העתק את המחסנית
 	for (int i = MaxStack - 1; i >= (MaxStack - 14); i--)
 		stack[i] = taskCopy[i];
-	stackSeg = FP_SEG(&stack[MaxStack - 14]);
-	stackPtr = FP_OFF(&stack[MaxStack - 14]);
+	
+	stackSeg=FP_SEG(&stack[MaxStack-14]);
+	stackPtr=FP_OFF(&stack[MaxStack-14]);
+	
+	// הורד 1 למונה מספר הפעמים
 	this->cycles--;
-	this->left_c_time = c_time;
+	this->left_c_time = this->c_time;
+	
+	// עדכן את זמני המחזור
 	status = READY;
 }
-/*****************/
+
 //----------------------------------------------------
 void Task::incrPriority( )
 {

@@ -56,14 +56,11 @@ void scheduler( )	// this also a parallel task
 		// It selects & switches the next task to be run.
 {
 	int nextTask, i;
-
-	// calling to the 'short term scheduler' algorithm
-	if (SMARTS.getError())
-		nextTask = SMARTS.getTotalTasks();
-	else {
-		nextTask = SMARTS.algorithm( );
-	}
-
+	nextTask = SMARTS.algorithm( );
+	
+		// checking for 'error'
+	if (SMARTS.getError())nextTask=SMARTS.getTotalTasks();
+	
 		// checking for 'deadlock' : not found task to run and tasks remain suspended
 	if (nextTask == SMARTS.getTotalTasks() && 
 		SMARTS.sleepTasks==0 && SMARTS.activeTasks>0)

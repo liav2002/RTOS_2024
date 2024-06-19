@@ -159,7 +159,7 @@ public:
 	int getCycles(int taskNum);
 	int getLeftCycleTime(int taskNum);
 	void leftCycleTimeDecr(int taskNum);
-	int finishAll();
+	int all_tasks_end();
 	/*****************/
 	
 };
