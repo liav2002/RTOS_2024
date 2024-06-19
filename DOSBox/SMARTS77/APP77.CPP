@@ -6,7 +6,7 @@
 /* APP77.CPP, an application to demonstrate SMARTS77  functioning   */
 /********************************************************************/
 #include "smarts77.h"
-#define NUM_OF_ITERATIONS 10
+#define NUM_OF_ITERATIONS 40
 
 /*
 Liav Ariel (212830871)
