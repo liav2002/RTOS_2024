@@ -94,7 +94,7 @@ void Parallelism::runTheTasks()
 			cprintf("\n\n\rExit : error\n");
 			break;
 		}
-		if (activeTasks==0)
+		if (all_tasks_end())
 		{
 			cprintf("\n\n\rExit : finish\n");
 			break;
@@ -235,6 +235,16 @@ void Parallelism::leftCycleTimeDecr(int taskNum)
 {
 	if (taskNum <= totalTasks)
 		context[taskNum].left_c_time--;
+}
+
+int Parallelism::all_tasks_end() 
+{
+	for (int i = 0; i < totalTasks; i++)
+	{
+		if (context[i].cycles > 1)
+			return 0;
+	}
+	return 1;
 }
 /*****************/
 
