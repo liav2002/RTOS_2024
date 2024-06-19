@@ -57,7 +57,10 @@ void scheduler( )	// this also a parallel task
 {
 	int nextTask, i;
 	nextTask = SMARTS.algorithm( );
-
+	
+		// checking for 'error'
+	if (SMARTS.getError())nextTask=SMARTS.getTotalTasks();
+	
 		// checking for 'deadlock' : not found task to run and tasks remain suspended
 	if (nextTask == SMARTS.getTotalTasks() && 
 		SMARTS.sleepTasks==0 && SMARTS.activeTasks>0)
