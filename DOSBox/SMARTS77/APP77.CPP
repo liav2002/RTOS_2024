@@ -82,7 +82,10 @@ void main( )
 	// SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, roundRobin);
 	
 	// EDF
-	SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, EDF);
+	// SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, EDF);
+	
+	// RMS
+	SMARTS.externalFunctions(timerInterruptHandler, scheduler, myTaskEnd, RMS);
 	
 	//Parameters are: char name, int cycleTime, int cycles
 	SMARTS.declareTask(a, 'A', 50, 3);

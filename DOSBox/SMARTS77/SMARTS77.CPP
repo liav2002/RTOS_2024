@@ -248,6 +248,16 @@ int Parallelism::all_tasks_end()
 }
 /*****************/
 
+/*Add Functions for Lab2: */
+int Parallelism::getCurrentPriority(int taskNum){
+	return context[taskNum].currentPriority;
+}
+
+void Parallelism::setPriority(int taskNum, int priority){
+	context[taskNum].currentPriority = priority;
+}
+/************************/
+
 taskStatus Parallelism::getStatus(int taskNum)  	
 	// returns status or undefined if not found
 {
