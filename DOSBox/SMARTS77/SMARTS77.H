@@ -53,6 +53,7 @@ public:
 	int c_time; // task cycle
 	int left_c_time; // current left time cycle
 	unsigned taskCopy[MaxStack]; // a copy of the task
+	int contextSwitchFlag;
 	/***************/
 	
 	char name;                      // task name
@@ -170,19 +171,19 @@ public:
 //=======================
 
 /* Add Classes for Lab2:*/
-class priorityQueue{
+class PriorityQueue{
 	private:
 		int array[MaxTask];
 		int max;
 		int size;
 	public:
-		priorityQueue(){
+		PriorityQueue(){
 			max = MaxTask;
 			size = 0;
 		}
 		void push(int task);
 		int pop();
-		int isEmpty();
+		int isEmpty() const;
 		void sort();
 };
 
@@ -190,7 +191,7 @@ class Mutex
 {
 	private:
 		int counter;
-		priorityQueue queue;
+		PriorityQueue queue;
 		int owner;
 		int level;
 		int inheritance;

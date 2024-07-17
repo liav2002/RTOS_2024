@@ -160,7 +160,7 @@ int Parallelism::contextSwitchOn( )
 		callScheduler();	// return control to the scheduler
 		return 1;
 	}
-	context[currentTask].contextSwitchFlag = tru
+	context[currentTask].contextSwitchFlag = true;
 	return 0;
 }
 
@@ -504,7 +504,7 @@ int PriorityQueue::pop() {
     return array[--size];
 }
 
-bool PriorityQueue::isEmpty() const {
+int PriorityQueue::isEmpty() const {
     return size == 0;
 }
 
@@ -538,7 +538,7 @@ void Mutex::acquire() {
             SMARTS.setPriority(owner, SMARTS.getCurrentPriority(currentTask));
         }
         queue.push(currentTask);
-        SMARTS.suspend();
+        SMARTS.suspended();
     }
 
     owner = currentTask;
