@@ -239,7 +239,7 @@ void Parallelism::leftCycleTimeDecr(int taskNum)
 
 int Parallelism::all_tasks_end() 
 {
-	for (int i = 0; i < totalTasks; i++)
+	for (int i = totalTasks - 1; i >= 0; --i)
 	{
 		if (context[i].cycles > 1)
 			return 0;
@@ -489,24 +489,20 @@ void Task::sleepDecr( )
 /* Add Classes*/
 /**********    class body:  priorityQueue     **********/
 void PriorityQueue::push(int task) {
-    if (size >= max) {
+    if (size >= MaxTask) {
         return;
     }
 
     array[size] = task;
     ++size;
-    sort();
+    this->sort();
 }
 
 int PriorityQueue::pop() {
-    if (isEmpty()) {
-        return -1;
-    }
-
     return array[--size];
 }
 
-int PriorityQueue::isEmpty() const {
+int PriorityQueue::isEmpty() {
     return size == 0;
 }
 

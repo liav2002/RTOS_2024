@@ -33,9 +33,9 @@ void far interrupt timerInterruptHandler(...)
 
 			// if the 'context switch' flag=true, save the current task variables
 			// and call the 'scheduler'
-	if (SMARTS.getContextSwitch() || SMARTS.getProgInt())   // save stack addr of interrupted task in current stack
+	if (SMARTS.getContextSwitch( ) || SMARTS.getProgInt())   // save stack addr of interrupted task in current stack
 	{
-		SMARTS.resetProgInt( ); 
+		SMARTS.resetProgInt( );  // it is a software "prog interrupt". reset this flag
 		SMARTS.setCurrentStack(StackSegAct,StackPtrAct);
 		SMARTS.restoreSchedStack( );	      // prepare activation of the task "scheduler"
 		SMARTS.getSchedStack(StackSegAct,StackPtrAct);
@@ -57,11 +57,16 @@ void scheduler( )	// this also a parallel task
 		// It selects & switches the next task to be run.
 {
 	int nextTask, i;
-	nextTask = SMARTS.algorithm( );
+
+		
 	
-		// checking for 'error'
-	if (SMARTS.getError())nextTask=SMARTS.getTotalTasks();
-	
+	if(SMARTS.getError()){
+		nextTask = SMARTS.getTotalTasks();
+	}
+	else{
+		// calling to the 'short term scheduler' algorithm
+		nextTask = SMARTS.algorithm();
+	}
 		// checking for 'deadlock' : not found task to run and tasks remain suspended
 	if (nextTask == SMARTS.getTotalTasks() && 
 		SMARTS.sleepTasks==0 && SMARTS.activeTasks>0)

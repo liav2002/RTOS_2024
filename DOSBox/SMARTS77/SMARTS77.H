@@ -183,7 +183,7 @@ class PriorityQueue{
 		}
 		void push(int task);
 		int pop();
-		int isEmpty() const;
+		int isEmpty();
 		void sort();
 };
 
