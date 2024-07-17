@@ -439,6 +439,8 @@ void Task::declare(void far *code, void far *userTaskEnd, char name, int cycleTi
 	this->c_time = cycleTime;
 	this->left_c_time = cycleTime;
 	this->cycles = cycles;
+	this->priority = cycleTime;
+	this->currentPriority = cycleTime;
 	for (int i = MaxStack - 1; i >= (MaxStack - 14); i--)
 		taskCopy[i] = stack[i];
 	status = READY;
@@ -508,21 +510,20 @@ int PriorityQueue::isEmpty() const {
     return size == 0;
 }
 
-void PriorityQueue::sort() {
-    // Insertion sort
-    for (int i = 1; i < size; ++i) {
-        int key = array[i];
-        int j = i - 1;
+void PriorityQueue::sort()
+{
+	// Insertion Sort
+	for (int i = 1; i < size; ++i) {
+		int key = array[i];
+		int j = i - 1;
 
-        // Move elements of array[0..i-1] that are greater than key
-        // to one position ahead of their current position
-        while (j >= 0 && SMARTS.getCurrentPriority(array[j]) > SMARTS.getCurrentPriority(key)) {
-            array[j + 1] = array[j];
-            --j;
-        }
+		while (j >= 0 && SMARTS.getCurrentPriority(array[j]) > SMARTS.getCurrentPriority(key)) {
+			array[j + 1] = array[j];
+			--j;
+		}
 
-        array[j + 1] = key;
-    }
+		array[j +1]=key;
+	}
 }
 
 /**********    class body:  Mutex     **********/
@@ -534,8 +535,10 @@ void Mutex::acquire() {
     if (counter == 1 || owner == currentTask) {
         counter = 0;
     } else {
-        if (inheritance && SMARTS.getCurrentPriority(owner) > SMARTS.getCurrentPriority(currentTask)) {
-            SMARTS.setPriority(owner, SMARTS.getCurrentPriority(currentTask));
+        if (inheritance ) {
+			if (SMARTS.getCurrentPriority(owner) > SMARTS.getCurrentPriority(currentTask)) {
+				SMARTS.setPriority(owner, SMARTS.getCurrentPriority(currentTask));	
+			}
         }
         queue.push(currentTask);
         SMARTS.suspended();
@@ -552,8 +555,7 @@ void Mutex::release() {
     int currentTask = SMARTS.getCurrentTask();
 
     if (owner == currentTask) {
-        if (--level > 0) {
-            SMARTS.contextSwitchOn();
+        if (--level) {
             return;
         } else {
             owner = -1;

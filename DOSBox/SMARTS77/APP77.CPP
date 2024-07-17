@@ -7,13 +7,13 @@
 
 #include "smarts77.h"
 
-Mutex ioMutex(false), joMutex(false), koMutex(false);
+Mutex ioMutex(false), joMutex(true), koMutex(true);
 // D -> A
 // E -> B
 // F -> C
 Event AtoC, AtoB;
 Event DtoF, DtoE;
-FILE *myOutput = fopen("test.txt", "w");
+FILE *myOutput = fopen("test2.txt", "w");
 // user Functions
 void a()
 {
@@ -409,9 +409,9 @@ void main()
 	SMARTS.declareTask(a, 'A', 402, 3);
 	SMARTS.declareTask(b, 'B', 401, 3);
 	SMARTS.declareTask(c, 'C', 400, 3);
-	//SMARTS.declareTask(d, 'D', 402, 3);
-	//SMARTS.declareTask(e, 'E', 401, 3);
-	//SMARTS.declareTask(f, 'F', 400, 3);
+	SMARTS.declareTask(d, 'D', 402, 3);
+	SMARTS.declareTask(e, 'E', 401, 3);
+	SMARTS.declareTask(f, 'F', 400, 3);
 	SMARTS.runTheTasks();
 }
 

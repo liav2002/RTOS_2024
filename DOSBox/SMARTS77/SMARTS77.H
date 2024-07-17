@@ -201,7 +201,6 @@ class Mutex
 			owner = -1;
 			level = 0;
 			inheritance = flag;
-			cprintf("flag %d", flag );
 		};
 		void acquire();
 		void release();
