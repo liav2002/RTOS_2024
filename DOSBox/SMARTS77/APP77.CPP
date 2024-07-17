@@ -7,13 +7,13 @@
 
 #include "smarts77.h"
 
-Mutex ioMutex(false), joMutex(true), koMutex(true);
+Mutex ioMutex(false), joMutex(false), koMutex(false);
 // D -> A
 // E -> B
 // F -> C
 Event AtoC, AtoB;
 Event DtoF, DtoE;
-FILE *myOutput = fopen("test2.txt", "w");
+FILE *myOutput = fopen("test1.txt", "w");
 // user Functions
 void a()
 {
