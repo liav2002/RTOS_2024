@@ -183,7 +183,7 @@ class PriorityQueue{
 		}
 		void push(int task);
 		int pop();
-		int isEmpty() const;
+		int isEmpty();
 		void sort();
 };
 
@@ -201,7 +201,6 @@ class Mutex
 			owner = -1;
 			level = 0;
 			inheritance = flag;
-			cprintf("flag %d", flag );
 		};
 		void acquire();
 		void release();

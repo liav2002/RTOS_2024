@@ -1,0 +1,85 @@
+
+ *************   C Start    *********************CCCCCC C wait to A
+
+ *************   F Start    *********************FFFFFF F wait to D
+
+ *************   B Start    *********************BBBBBB B wait to A
+
+ *************   E Start    *********************EEEEEE E wait to D
+
+ *************   A Start    *********************AAAAAA A acquire joMutex
+AAAAAA A send to C
+ A send to B
+CCCCCC C acquire joMutex
+AAAAAA A release joMutex
+CCCCCC C release joMutex
+
+ *************   C Finish   *********************BBBBBBBBBBBBBBBBBBBBBBBBBB
+ *************   B Finish   *********************AAAAAA
+ *************   A Finish   *********************
+ *************   D Start    *********************DDDDDD D acquire koMutex
+DDDDDD D send to F
+ D send to E
+FFFFFF F acquire koMutex
+DDDDDD D release koMutex
+FFFFFF F release koMutex
+
+ *************   F Finish   *********************EEEEEEEEEEEEEEEEEEEEEEEEEE
+ *************   E Finish   *********************DDDDDD
+ *************   D Finish   *********************
+ *************   C Start    *********************CCCCCC C wait to A
+
+ *************   F Start    *********************FFFFFF F wait to D
+
+ *************   B Start    *********************BBBBBB B wait to A
+
+ *************   E Start    *********************EEEEEE E wait to D
+
+ *************   A Start    *********************AAAAAA A acquire joMutex
+AAAAAA A send to C
+ A send to B
+CCCCCC C acquire joMutex
+AAAAAA A release joMutex
+CCCCCC C release joMutex
+
+ *************   C Finish   *********************BBBBBBBBBBBBBBBBBBBBBBBBBB
+ *************   B Finish   *********************AAAAAA
+ *************   A Finish   *********************
+ *************   D Start    *********************DDDDDD D acquire koMutex
+DDDDDD D send to F
+ D send to E
+FFFFFF F acquire koMutex
+DDDDDD D release koMutex
+FFFFFF F release koMutex
+
+ *************   F Finish   *********************EEEEEEEEEEEEEEEEEEEEEEEEEE
+ *************   E Finish   *********************DDDDDD
+ *************   D Finish   *********************
+ *************   C Start    *********************CCCCCC C wait to A
+
+ *************   F Start    *********************FFFFFF F wait to D
+
+ *************   B Start    *********************BBBBBB B wait to A
+
+ *************   E Start    *********************EEEEEE E wait to D
+
+ *************   A Start    *********************AAAAAA A acquire joMutex
+AAAAAA A send to C
+ A send to B
+CCCCCC C acquire joMutex
+AAAAAA A release joMutex
+CCCCCC C release joMutex
+
+ *************   C Finish   *********************BBBBBBBBBBBBBBBBBBBBBBBBBB
+ *************   B Finish   *********************AAAAAA
+ *************   A Finish   *********************
+ *************   D Start    *********************DDDDDD D acquire koMutex
+DDDDDD D send to F
+ D send to E
+FFFFFF F acquire koMutex
+DDDDDD D release koMutex
+FFFFFF F release koMutex
+
+ *************   F Finish   *********************EEEEEEEEEEEEEEEEEEEEEEEEEE
+ *************   E Finish   *********************DDDDDD
+ *************   D Finish   *********************
