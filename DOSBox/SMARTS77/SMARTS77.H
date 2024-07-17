@@ -162,6 +162,10 @@ public:
 	int all_tasks_end();
 	/*****************/
 	
+	/*Add Functions for Lab2: */
+	int getCurrentPriority(int taskNum);
+	void setPriority(int taskNum, int priority);
+	/************************/
 };
 //=======================
 /**********    Functions    **********/
@@ -174,6 +178,7 @@ void myTaskEnd();
 	// 'short term' scheduler algorithms 
 int roundRobin();
 int EDF();
+int RMS();
 	// main scheduler object
 extern Parallelism SMARTS;
 

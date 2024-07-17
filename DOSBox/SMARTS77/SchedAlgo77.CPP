@@ -39,3 +39,21 @@ int EDF()
 	return nextTask;
 }
 
+int RMS() {
+    int minExecutionTime = MAXINT;
+	int totalTasks = SMARTS.getTotalTasks();
+    int nextTask = totalTasks;
+
+    for (int count = 0; count < totalTasks; ++count) {
+        if (SMARTS.getStatus(count) == READY) {
+            int currentPriority = SMARTS.getCurrentPriority(count);
+            if (currentPriority < minExecutionTime) {
+                nextTask = count;
+                minExecutionTime = currentPriority;
+            }
+        }
+    }
+
+    return nextTask;
+}
+
