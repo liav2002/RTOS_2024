@@ -29,7 +29,7 @@ Parallelism::Parallelism()
 	activeTasks = 0;
 	totalTasks  = 0;
 	deadlock    = false;
-	contextSwitchFlag = true;
+	//contextSwitchFlag = true;
 	endOfTimeSlice = true;
 }
 
@@ -156,23 +156,23 @@ int Parallelism::contextSwitchOn( )
 	if (endOfTimeSlice) //is current time slice finished ?
 	{	
 		endOfTimeSlice = false;
-		contextSwitchFlag = true;
+		context[currentTask].contextSwitchFlag = true;
 		callScheduler();	// return control to the scheduler
 		return 1;
 	}
-	contextSwitchFlag = true;
+	context[currentTask].contextSwitchFlag = tru
 	return 0;
 }
 
 void Parallelism::contextSwitchOff( )
 				// Disable context switch
 {	
-	contextSwitchFlag = false;
+	context[currentTask].contextSwitchFlag = false;
 }
 
 int Parallelism::getContextSwitch( )
 {	
-	return contextSwitchFlag;
+	return context[currentTask].contextSwitchFlag;
 }
 
 void Parallelism::setProgInt( )
@@ -425,6 +425,7 @@ Task::Task()
 	status = NOT_ACTIVE;
 	sleepCount = 0;
 	currentPriority=priority=0;
+	contextSwitchFlag = true;
 }
 //-----------------------------------------------------
 void Task::declare(void far *code, void far *userTaskEnd, char name, int cycleTime, int cycles)

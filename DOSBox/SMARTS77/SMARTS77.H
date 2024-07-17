@@ -162,14 +162,14 @@ public:
 	int all_tasks_end();
 	/*****************/
 	
-	/*Add Functions for Lab2: */
+	/*Add Functions for Lab2:*/
 	int getCurrentPriority(int taskNum);
 	void setPriority(int taskNum, int priority);
 	/************************/
 };
 //=======================
 
-/* Add Classes*/
+/* Add Classes for Lab2:*/
 class priorityQueue{
 	private:
 		int array[MaxTask];
