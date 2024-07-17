@@ -168,6 +168,45 @@ public:
 	/************************/
 };
 //=======================
+
+/* Add Classes*/
+class priorityQueue{
+	private:
+		int array[MaxTask];
+		int max;
+		int size;
+	public:
+		priorityQueue(){
+			max = MaxTask;
+			size = 0;
+		}
+		void push(int task);
+		int pop();
+		int isEmpty();
+		void sort();
+};
+
+class Mutex
+{
+	private:
+		int counter;
+		priorityQueue queue;
+		int owner;
+		int level;
+		int inheritance;
+	public:
+		Mutex(int flag){
+			counter = 1;
+			owner = -1;
+			level = 0;
+			inheritance = flag;
+			cprintf("flag %d", flag );
+		};
+		void acquire();
+		void release();
+};
+/************/
+
 /**********    Functions    **********/
 	// reads the number of the remaining clocks from the timer register
 extern unsigned getTimerClocks();
