@@ -53,6 +53,7 @@ public:
 	int c_time; // task cycle
 	int left_c_time; // current left time cycle
 	unsigned taskCopy[MaxStack]; // a copy of the task
+	int contextSwitchFlag;
 	/***************/
 	
 	char name;                      // task name
@@ -162,12 +163,51 @@ public:
 	int all_tasks_end();
 	/*****************/
 	
-	/*Add Functions for Lab2: */
+	/*Add Functions for Lab2:*/
 	int getCurrentPriority(int taskNum);
 	void setPriority(int taskNum, int priority);
 	/************************/
 };
 //=======================
+
+/* Add Classes for Lab2:*/
+class PriorityQueue{
+	private:
+		int array[MaxTask];
+		int max;
+		int size;
+	public:
+		PriorityQueue(){
+			max = MaxTask;
+			size = 0;
+		}
+		void push(int task);
+		int pop();
+		int isEmpty() const;
+		void sort();
+};
+
+class Mutex
+{
+	private:
+		int counter;
+		PriorityQueue queue;
+		int owner;
+		int level;
+		int inheritance;
+	public:
+		Mutex(int flag){
+			counter = 1;
+			owner = -1;
+			level = 0;
+			inheritance = flag;
+			cprintf("flag %d", flag );
+		};
+		void acquire();
+		void release();
+};
+/************/
+
 /**********    Functions    **********/
 	// reads the number of the remaining clocks from the timer register
 extern unsigned getTimerClocks();

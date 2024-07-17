@@ -1,0 +1,43 @@
+
+ *************   A Start    *********************AAAAAA A acquire joMutex
+AAAAAA A send to C
+ A send to B
+AAAAAA A release joMutex
+AAAAAA
+ *************   A Finish   *********************
+ *************   B Start    *********************BBBBBB B wait to A
+BBBBBBBBBBBBBBBBBBBBBBBBBB
+ *************   B Finish   *********************
+ *************   C Start    *********************CCCCCC C wait to A
+CCCCCC C acquire joMutex
+CCCCCC C release joMutex
+
+ *************   C Finish   *********************
+ *************   C Start    *********************
+ *************   B Start    *********************
+ *************   A Start    *********************AAAAAA A acquire joMutex
+AAAAAA A send to C
+ A send to B
+AAAAAA A release joMutex
+AAAAAA
+ *************   A Finish   *********************BBBBBB B wait to A
+BBBBBBBBBBBBBBBBBBBBBBBBBB
+ *************   B Finish   *********************CCCCCC C wait to A
+CCCCCC C acquire joMutex
+CCCCCC C release joMutex
+
+ *************   C Finish   *********************
+ *************   C Start    *********************
+ *************   B Start    *********************
+ *************   A Start    *********************AAAAAA A acquire joMutex
+AAAAAA A send to C
+ A send to B
+AAAAAA A release joMutex
+AAAAAA
+ *************   A Finish   *********************BBBBBB B wait to A
+BBBBBBBBBBBBBBBBBBBBBBBBBB
+ *************   B Finish   *********************CCCCCC C wait to A
+CCCCCC C acquire joMutex
+CCCCCC C release joMutex
+
+ *************   C Finish   *********************

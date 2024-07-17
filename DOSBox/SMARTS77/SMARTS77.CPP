@@ -29,7 +29,7 @@ Parallelism::Parallelism()
 	activeTasks = 0;
 	totalTasks  = 0;
 	deadlock    = false;
-	contextSwitchFlag = true;
+	//contextSwitchFlag = true;
 	endOfTimeSlice = true;
 }
 
@@ -156,23 +156,23 @@ int Parallelism::contextSwitchOn( )
 	if (endOfTimeSlice) //is current time slice finished ?
 	{	
 		endOfTimeSlice = false;
-		contextSwitchFlag = true;
+		context[currentTask].contextSwitchFlag = true;
 		callScheduler();	// return control to the scheduler
 		return 1;
 	}
-	contextSwitchFlag = true;
+	context[currentTask].contextSwitchFlag = true;
 	return 0;
 }
 
 void Parallelism::contextSwitchOff( )
 				// Disable context switch
 {	
-	contextSwitchFlag = false;
+	context[currentTask].contextSwitchFlag = false;
 }
 
 int Parallelism::getContextSwitch( )
 {	
-	return contextSwitchFlag;
+	return context[currentTask].contextSwitchFlag;
 }
 
 void Parallelism::setProgInt( )
@@ -425,6 +425,7 @@ Task::Task()
 	status = NOT_ACTIVE;
 	sleepCount = 0;
 	currentPriority=priority=0;
+	contextSwitchFlag = true;
 }
 //-----------------------------------------------------
 void Task::declare(void far *code, void far *userTaskEnd, char name, int cycleTime, int cycles)
@@ -483,4 +484,92 @@ void Task::sleepDecr( )
 	}
 }
 
+/* Add Classes*/
+/**********    class body:  priorityQueue     **********/
+void PriorityQueue::push(int task) {
+    if (size >= max) {
+        return;
+    }
+
+    array[size] = task;
+    ++size;
+    sort();
+}
+
+int PriorityQueue::pop() {
+    if (isEmpty()) {
+        return -1;
+    }
+
+    return array[--size];
+}
+
+int PriorityQueue::isEmpty() const {
+    return size == 0;
+}
+
+void PriorityQueue::sort() {
+    // Insertion sort
+    for (int i = 1; i < size; ++i) {
+        int key = array[i];
+        int j = i - 1;
+
+        // Move elements of array[0..i-1] that are greater than key
+        // to one position ahead of their current position
+        while (j >= 0 && SMARTS.getCurrentPriority(array[j]) > SMARTS.getCurrentPriority(key)) {
+            array[j + 1] = array[j];
+            --j;
+        }
+
+        array[j + 1] = key;
+    }
+}
+
+/**********    class body:  Mutex     **********/
+void Mutex::acquire() {
+    SMARTS.contextSwitchOff();
+	
+    int currentTask = SMARTS.getCurrentTask();
+
+    if (counter == 1 || owner == currentTask) {
+        counter = 0;
+    } else {
+        if (inheritance && SMARTS.getCurrentPriority(owner) > SMARTS.getCurrentPriority(currentTask)) {
+            SMARTS.setPriority(owner, SMARTS.getCurrentPriority(currentTask));
+        }
+        queue.push(currentTask);
+        SMARTS.suspended();
+    }
+
+    owner = currentTask;
+    level++;
+    SMARTS.contextSwitchOn();
+}
+
+void Mutex::release() {
+    SMARTS.contextSwitchOff();
+
+    int currentTask = SMARTS.getCurrentTask();
+
+    if (owner == currentTask) {
+        if (--level > 0) {
+            SMARTS.contextSwitchOn();
+            return;
+        } else {
+            owner = -1;
+            if (!queue.isEmpty()) {
+                SMARTS.resume(queue.pop());
+            } else {
+                counter = 1;
+            }
+        }
+    }
+
+    if (inheritance) {
+        SMARTS.setOriginalPriority(currentTask);
+    }
+
+    SMARTS.contextSwitchOn();
+}
+/************/
 
