@@ -35,6 +35,7 @@ void far interrupt timerInterruptHandler(...)
 			// and call the 'scheduler'
 	if (SMARTS.getContextSwitch() || SMARTS.getProgInt())   // save stack addr of interrupted task in current stack
 	{
+		SMARTS.resetProgInt( ); 
 		SMARTS.setCurrentStack(StackSegAct,StackPtrAct);
 		SMARTS.restoreSchedStack( );	      // prepare activation of the task "scheduler"
 		SMARTS.getSchedStack(StackSegAct,StackPtrAct);
